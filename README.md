@@ -40,7 +40,7 @@ instalar expo
 Dependencias
  - npm install @react-native-async-storage/async-storage @react-navigation/native @react-navigation/stack react-native-draggable-flatlist
    iconos de expo si aun no los tienes:
-   expo install @expo/vector-icons
+ - expo install @expo/vector-icons
 
 iniciar app
 
