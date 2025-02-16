@@ -1,21 +1,33 @@
+// screens/Inicio.jsx
+
 import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Keyboard,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import DraggableFlatList from 'react-native-draggable-flatlist';
+import { useNavigation } from '@react-navigation/native';
 
-const Inicio = ({ navigation }) => {
+const Inicio = () => {
+  const navigation = useNavigation();
   const [tareas, setTareas] = useState([]);
 
+  // 1. useEffect para cargar tareas solo una vez
   useEffect(() => {
     cargarTareas();
   }, []);
+
+  // 2. Listener: cada vez que la pantalla “Inicio” reciba foco, recargamos las tareas
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      cargarTareas();
+    });
+    return unsubscribe; // Limpia el listener al desmontar
+  }, [navigation]);
 
   const cargarTareas = async () => {
     try {
@@ -36,6 +48,7 @@ const Inicio = ({ navigation }) => {
     }
   };
 
+  // Marcar como completada e inmediatamente reordenar (pendientes arriba)
   const toggleCompletada = (id) => {
     const nuevasTareas = tareas.map((t) =>
       t.id === id ? { ...t, completada: !t.completada } : t
@@ -47,6 +60,7 @@ const Inicio = ({ navigation }) => {
     guardarTareas(nuevasOrdenadas);
   };
 
+  // Ordenar pendientes arriba, completadas abajo
   const sortedTareas = [...tareas].sort((a, b) => {
     if (!a.completada && b.completada) return -1;
     if (a.completada && !b.completada) return 1;
@@ -57,6 +71,7 @@ const Inicio = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {/* Cabecera */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>App de tareas</Text>
         <View style={styles.searchContainer}>
@@ -72,12 +87,12 @@ const Inicio = ({ navigation }) => {
         </View>
       </View>
 
+      {/* Lista */}
       <View style={styles.listWrapper}>
         <DraggableFlatList
           data={sortedTareas}
           keyExtractor={(item) => item.id}
           activationDistance={20}
-          contentContainerStyle={{ paddingBottom: 20 }}
           renderItem={({ item, drag, isActive }) => (
             <TouchableOpacity
               onLongPress={!item.completada ? drag : null}
@@ -100,9 +115,9 @@ const Inicio = ({ navigation }) => {
                 </View>
                 <TouchableOpacity onPress={() => toggleCompletada(item.id)}>
                   {item.completada ? (
-                    <Ionicons name="checkmark-circle" size={40} color="green" />
+                    <Ionicons name="checkmark-circle" size={32} color="green" />
                   ) : (
-                    <Ionicons name="ellipse-outline" size={40} color="#ccc" />
+                    <Ionicons name="ellipse-outline" size={32} color="#ccc" />
                   )}
                 </TouchableOpacity>
               </View>
@@ -118,6 +133,7 @@ const Inicio = ({ navigation }) => {
         />
       </View>
 
+      {/* Footer */}
       <View style={styles.footer}>
         <Text style={styles.footerText}>
           Tienes pendientes {contadorPendientes} tarea
@@ -177,21 +193,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   taskText: {
-    fontSize: 20,
+    fontSize: 16,
     color: '#333',
   },
   taskTime: {
-    fontSize: 15,
+    fontSize: 12,
     color: '#888',
     marginTop: 3,
   },
   dragHint: {
-    fontSize: 17,
+    fontSize: 12,
     color: '#888',
     marginTop: 5,
   },
   footer: {
-    backgroundColor: '#2979FF',
     padding: 20,
     alignItems: 'center',
   },

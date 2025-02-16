@@ -1,20 +1,27 @@
+// screens/EditarTarea.jsx
+
 import React, { useState } from 'react';
-import { View, Button, StyleSheet, TextInput, Text, Alert } from 'react-native';
+import { View, Button, StyleSheet, TextInput, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditarTarea = ({ navigation, route }) => {
   const tareaExistente = route?.params?.tarea;
   const [titulo, setTitulo] = useState(tareaExistente ? tareaExistente.titulo : '');
-  const [descripcion, setDescripcion] = useState(tareaExistente ? tareaExistente.descripcion : '');
+  const [descripcion, setDescripcion] = useState(
+    tareaExistente ? tareaExistente.descripcion : ''
+  );
 
   const guardarTarea = async () => {
     try {
       let tareas = JSON.parse(await AsyncStorage.getItem('tareas')) || [];
+
       if (tareaExistente) {
+        // Editar
         tareas = tareas.map((t) =>
           t.id === tareaExistente.id ? { ...t, titulo, descripcion } : t
         );
       } else {
+        // Crear
         const nuevaTarea = {
           id: Date.now().toString(),
           titulo,
@@ -24,14 +31,18 @@ const EditarTarea = ({ navigation, route }) => {
         };
         tareas.push(nuevaTarea);
       }
+
       await AsyncStorage.setItem('tareas', JSON.stringify(tareas));
-      navigation.navigate('Inicio');
+
+      // Reemplazar la pantalla actual por "Inicio"
+      navigation.replace('Inicio');
     } catch (error) {
       console.error('Error al guardar la tarea:', error);
     }
   };
 
   const eliminarTarea = async () => {
+    if (!tareaExistente) return;
     Alert.alert(
       'Eliminar tarea',
       '¿Estás seguro de eliminar esta tarea?',
@@ -45,7 +56,7 @@ const EditarTarea = ({ navigation, route }) => {
               let tareas = JSON.parse(await AsyncStorage.getItem('tareas')) || [];
               tareas = tareas.filter((t) => t.id !== tareaExistente.id);
               await AsyncStorage.setItem('tareas', JSON.stringify(tareas));
-              navigation.navigate('Inicio');
+              navigation.replace('Inicio');
             } catch (error) {
               console.error('Error al eliminar la tarea:', error);
             }
@@ -57,11 +68,6 @@ const EditarTarea = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      {tareaExistente && (
-        <Text style={styles.creationTime}>
-          Creada a: {tareaExistente.horaCreacion}
-        </Text>
-      )}
       <TextInput
         style={styles.input}
         placeholder="Título de la tarea"
@@ -75,6 +81,7 @@ const EditarTarea = ({ navigation, route }) => {
         onChangeText={setDescripcion}
       />
       <Button title="Guardar" onPress={guardarTarea} />
+
       {tareaExistente && (
         <View style={{ marginTop: 10 }}>
           <Button title="Eliminar" color="red" onPress={eliminarTarea} />
@@ -84,8 +91,13 @@ const EditarTarea = ({ navigation, route }) => {
   );
 };
 
+export default EditarTarea;
+
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
+  container: {
+    flex: 1,
+    padding: 20,
+  },
   input: {
     borderWidth: 1,
     padding: 10,
@@ -93,11 +105,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: '#ccc',
   },
-  creationTime: {
-    fontSize: 14,
-    marginBottom: 10,
-    color: '#555',
-  },
 });
 
-export default EditarTarea;
