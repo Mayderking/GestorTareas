@@ -43,6 +43,8 @@ Dependencias
    expo install @expo/vector-icons
 
 iniciar app
-  npm start (ejecutar en la terminal)
+-abrir una terminal powershell o la misma terminal de visual
+-estar en el directorio de la app
+-ejecutar npm start
 
 
