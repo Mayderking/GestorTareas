@@ -35,16 +35,17 @@ Esta es una aplicación de lista de tareas desarrollada con **React Native** y *
    cd tu_repositorio
 
 instalar expo
-  npm install --global expo
+ - **npm install --global expo**
 
 Dependencias
-   npm install @react-native-async-storage/async-storage @react-navigation/native @react-navigation/stack react-native-draggable-flatlist
+ - npm install @react-native-async-storage/async-storage @react-navigation/native @react-navigation/stack react-native-draggable-flatlist
    iconos de expo si aun no los tienes:
    expo install @expo/vector-icons
 
 iniciar app
--abrir una terminal powershell o la misma terminal de visual
--estar en el directorio de la app
--ejecutar npm start
+
+- abrir una terminal powershell o la misma terminal de visual
+- estar en el directorio de la app
+- ejecutar npm start
 
 
