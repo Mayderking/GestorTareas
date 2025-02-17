@@ -1,5 +1,3 @@
-// screens/Inicio.jsx
-
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -16,17 +14,15 @@ const Inicio = () => {
   const navigation = useNavigation();
   const [tareas, setTareas] = useState([]);
 
-  // 1. useEffect para cargar tareas solo una vez
   useEffect(() => {
     cargarTareas();
   }, []);
 
-  // 2. Listener: cada vez que la pantalla “Inicio” reciba foco, recargamos las tareas
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       cargarTareas();
     });
-    return unsubscribe; // Limpia el listener al desmontar
+    return unsubscribe;
   }, [navigation]);
 
   const cargarTareas = async () => {
@@ -48,7 +44,6 @@ const Inicio = () => {
     }
   };
 
-  // Marcar como completada e inmediatamente reordenar (pendientes arriba)
   const toggleCompletada = (id) => {
     const nuevasTareas = tareas.map((t) =>
       t.id === id ? { ...t, completada: !t.completada } : t
@@ -60,7 +55,6 @@ const Inicio = () => {
     guardarTareas(nuevasOrdenadas);
   };
 
-  // Ordenar pendientes arriba, completadas abajo
   const sortedTareas = [...tareas].sort((a, b) => {
     if (!a.completada && b.completada) return -1;
     if (a.completada && !b.completada) return 1;
@@ -71,7 +65,6 @@ const Inicio = () => {
 
   return (
     <View style={styles.container}>
-      {/* Cabecera */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>App de tareas</Text>
         <View style={styles.searchContainer}>
@@ -87,7 +80,6 @@ const Inicio = () => {
         </View>
       </View>
 
-      {/* Lista */}
       <View style={styles.listWrapper}>
         <DraggableFlatList
           data={sortedTareas}
@@ -133,7 +125,6 @@ const Inicio = () => {
         />
       </View>
 
-      {/* Footer */}
       <View style={styles.footer}>
         <Text style={styles.footerText}>
           Tienes pendientes {contadorPendientes} tarea

@@ -1,5 +1,3 @@
-// screens/EditarTarea.jsx
-
 import React, { useState } from 'react';
 import { View, Button, StyleSheet, TextInput, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,12 +14,10 @@ const EditarTarea = ({ navigation, route }) => {
       let tareas = JSON.parse(await AsyncStorage.getItem('tareas')) || [];
 
       if (tareaExistente) {
-        // Editar
         tareas = tareas.map((t) =>
           t.id === tareaExistente.id ? { ...t, titulo, descripcion } : t
         );
       } else {
-        // Crear
         const nuevaTarea = {
           id: Date.now().toString(),
           titulo,
@@ -34,7 +30,6 @@ const EditarTarea = ({ navigation, route }) => {
 
       await AsyncStorage.setItem('tareas', JSON.stringify(tareas));
 
-      // Reemplazar la pantalla actual por "Inicio"
       navigation.replace('Inicio');
     } catch (error) {
       console.error('Error al guardar la tarea:', error);
