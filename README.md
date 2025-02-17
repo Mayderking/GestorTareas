@@ -31,8 +31,8 @@ Esta es una aplicación de lista de tareas desarrollada con **React Native** y *
 1. **Clona el repositorio:**
 
    ```bash
-   [git clone https://github.com/Mayderking/tu_repositorio.git](https://github.com/Mayderking/GestorTareas.git)
-   cd tu_repositorio
+   (https://github.com/Mayderking/GestorTareas.git)
+   cd GestorTareas
 
 instalar expo
  - **npm install --global expo**
